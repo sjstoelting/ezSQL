@@ -31,25 +31,25 @@ class ezSQL_mysql extends ezSQLcore
      * Database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * Database password for the given user
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * Database name
      * @var string
      */
-    private $dbname;
+    private $_dbname;
 
     /**
      * Host name or IP address
      * @var string
      */
-    private $dbhost;
+    private $_dbhost;
     
     /**
      * Database charset
@@ -85,10 +85,10 @@ class ezSQL_mysql extends ezSQLcore
        
         parent::__construct();
        
-        $this->dbuser = $dbuser;
-        $this->dbpassword = $dbpassword;
-        $this->dbname = $dbname;
-        $this->dbhost = $dbhost;
+        $this->_dbuser = $dbuser;
+        $this->_dbpassword = $dbpassword;
+        $this->_dbname = $dbname;
+        $this->_dbhost = $dbhost;
         if ( ! empty($charset) ) {
             $this->charset = strtolower(str_replace('-', '', $charset));
         }
@@ -127,16 +127,16 @@ class ezSQL_mysql extends ezSQLcore
     public function connect($dbuser='', $dbpassword='', $dbhost='localhost', $charset='') {
         $this->connected = false;
         
-        $this->dbuser = empty($dbuser) ? $this->dbuser : $dbuser;
-        $this->dbpassword = empty($dbpassword) ? $this->dbpassword : $dbpassword;
-        $this->dbhost = $dbhost!='localhost' ? $this->dbhost : $dbhost;
+        $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
+        $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
+        $this->_dbhost = $dbhost!='localhost' ? $this->_dbhost : $dbhost;
         $this->charset = empty($charset) ? $this->charset : $charset;
        
         // Must have a user and a password
-        if ( empty($this->dbuser) ) {
+        if ( empty($this->_dbuser) ) {
             $this->register_error($this->ezsql_mysql_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($this->ezsql_mysql_str[1], E_USER_WARNING) : null;
-        } else if ( ! $this->dbh = @mysql_connect($this->dbhost, $this->dbuser, $this->dbpassword, true, 131074) ) {
+        } else if ( ! $this->dbh = @mysql_connect($this->_dbhost, $this->_dbuser, $this->_dbpassword, true, 131074) ) {
             // Try to establish the server database handle
             $this->register_error($this->ezsql_mysql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($this->ezsql_mysql_str[2], E_USER_WARNING) : null;
@@ -174,7 +174,7 @@ class ezSQL_mysql extends ezSQLcore
             $this->register_error($str . ' in ' .__FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($str, E_USER_WARNING) : null;
         } else {
-            $this->dbname = $dbname;
+            $this->_dbname = $dbname;
             if ( $charset == '') {
                 $charset = $this->charset;
             }
@@ -249,8 +249,8 @@ class ezSQL_mysql extends ezSQLcore
 
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dbuser, $this->dbpassword, $this->dbhost);
-            $this->select($this->dbname);
+            $this->connect($this->_dbuser, $this->_dbpassword, $this->_dbhost);
+            $this->select($this->_dbname);
         }
 
         // Perform the query via std mysql_query function..
@@ -330,7 +330,7 @@ class ezSQL_mysql extends ezSQLcore
      * @return string
      */
     public function getDBHost() {
-        return $this->dbhost;
+        return $this->_dbhost;
     } // getDBHost
 
     /**

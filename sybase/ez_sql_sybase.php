@@ -118,7 +118,7 @@ class ezSQL_sybase extends ezSQLcore
         if ( ! $this->connect($dbuser, $dbpassword, $dbhost,true) ) ;
         else if ( ! $this->select($dbname) ) ;
 
-        return $this->connected;
+        return $this->_connected;
     } // quick_connect
 
     /**
@@ -133,7 +133,7 @@ class ezSQL_sybase extends ezSQLcore
      * @return boolean
      */
     public function connect($dbuser='', $dbpassword='', $dbhost='localhost') {
-        $this->connected = false;
+        $this->_connected = false;
 
         // Must have a user and a password
         if ( ! $dbuser ) {
@@ -147,10 +147,10 @@ class ezSQL_sybase extends ezSQLcore
             $this->dbuser = $dbuser;
             $this->dbpassword = $dbpassword;
             $this->dbhost = $dbhost;
-            $this->connected = true;
+            $this->_connected = true;
         }
 
-        return $this->connected;
+        return $this->_connected;
     } // connect
 
     /**********************************************************************
@@ -164,7 +164,7 @@ class ezSQL_sybase extends ezSQLcore
      * @return boolean
      */
     public function select($dbname='') {
-        $this->connected = false;
+        $this->_connected = false;
 
         // Must have a database name
         if ( ! $dbname ) {
@@ -182,10 +182,10 @@ class ezSQL_sybase extends ezSQLcore
             $this->show_errors ? trigger_error($str, E_USER_WARNING) : null;
         } else {
             $this->dbname = $dbname;
-            $this->connected = true;
+            $this->_connected = true;
         }
 
-        return $this->connected;
+        return $this->_connected;
     } // select
 
     /**
@@ -303,7 +303,7 @@ class ezSQL_sybase extends ezSQLcore
         // Query was an insert, delete, update, replace
         $is_insert = false;
         if ( preg_match("/^(insert|delete|update|replace)\s+/i", $query) ) {
-            $this->affectedRows = @sybase_rows_affected($this->dbh);
+            $this->_affectedRows = @sybase_rows_affected($this->dbh);
 
             // Take note of the insert_id
             if ( preg_match("/^(insert|replace)\s+/i",$query) ) {
@@ -317,7 +317,7 @@ class ezSQL_sybase extends ezSQLcore
             }
 
             // Return number of rows affected
-            $return_val = $this->affectedRows;
+            $return_val = $this->_affectedRows;
         } else {
             // Query was a select
             // Take note of column info
@@ -421,7 +421,7 @@ class ezSQL_sybase extends ezSQLcore
     public function disconnect() {
         if ( $this->dbh ) {
             $this->dbh = null;
-            $this->connected = false;
+            $this->_connected = false;
         }
     } // disconnect
 

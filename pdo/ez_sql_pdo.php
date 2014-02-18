@@ -116,7 +116,7 @@ class ezSQL_pdo extends ezSQLcore
      * @return boolean
      */
     public function connect($dsn='', $dbuser='', $dbpassword='', $options=array(), $isFileBased=false) {
-        $this->connected = false;
+        $this->_connected = false;
 
         $this->_dsn = empty($dsn) ? $this->_dsn : $dsn;
         $this->_isFileBased = $isFileBased;
@@ -143,10 +143,10 @@ class ezSQL_pdo extends ezSQLcore
         try  {
             if ($this->_isFileBased) {
                 $this->dbh = new PDO($this->_dsn);
-                $this->connected = true;
+                $this->_connected = true;
             } else {
                 $this->dbh = new PDO($this->_dsn, $this->_dbuser, $this->_dbpassword, $this->_options);
-                $this->connected = true;
+                $this->_connected = true;
             }
         }
         catch (PDOException $e) {
@@ -154,9 +154,9 @@ class ezSQL_pdo extends ezSQLcore
             $this->show_errors ? trigger_error($e->getMessage() . '- $dsn: ' . $dsn, E_USER_WARNING) : null;
         }
 
-        $this->isConnected = $this->connected;
+        $this->isConnected = $this->_connected;
 
-        return $this->connected;
+        return $this->_connected;
     } // connect
 
     /**
@@ -318,7 +318,7 @@ class ezSQL_pdo extends ezSQLcore
         if ( preg_match("/^(insert|delete|update|replace|drop|create)\s+/i", $query) ) {
 
             // Perform the query and log number of affected rows
-            $this->affectedRows = $this->dbh->exec($query);
+            $this->_affectedRows = $this->dbh->exec($query);
 
             // If there is an error then take note of it..
             if ( $this->catch_error() ) {
@@ -333,7 +333,7 @@ class ezSQL_pdo extends ezSQLcore
             }
 
             // Return number fo rows affected
-            $return_val = $this->affectedRows;
+            $return_val = $this->_affectedRows;
 
         } else {
             // Query was an select
@@ -400,7 +400,7 @@ class ezSQL_pdo extends ezSQLcore
     public function disconnect(){
         if ($this->dbh) {
             $this->dbh = null;
-            $this->connected = false;
+            $this->_connected = false;
         }
      } // disconnect
 

@@ -110,7 +110,7 @@ class ezSQL_mysql extends ezSQLcore
         if ( ! $this->connect($dbuser, $dbpassword, $dbhost, true) ) ;
         else if ( ! $this->select($dbname, $charset) ) ;
         
-        return $this->connected;
+        return $this->_connected;
     } // quick_connect
 
     /**
@@ -125,7 +125,7 @@ class ezSQL_mysql extends ezSQLcore
      * @return boolean 
      */
     public function connect($dbuser='', $dbpassword='', $dbhost='localhost', $charset='') {
-        $this->connected = false;
+        $this->_connected = false;
         
         $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
         $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
@@ -142,10 +142,10 @@ class ezSQL_mysql extends ezSQLcore
             $this->show_errors ? trigger_error($this->ezsql_mysql_str[2], E_USER_WARNING) : null;
         } else {
             mysql_set_charset($this->_charset, $this->dbh);
-            $this->connected = true;
+            $this->_connected = true;
         }
 
-        return $this->connected;
+        return $this->_connected;
     } // connect
 
     /**
@@ -189,10 +189,10 @@ class ezSQL_mysql extends ezSQLcore
                     mysql_query('SET NAMES \'' . $encoding . '\'');                                                
                 }    
             }
-            $this->connected = true;
+            $this->_connected = true;
         }
 
-        return $this->connected;
+        return $this->_connected;
     } // select
 
     /**
@@ -267,7 +267,7 @@ class ezSQL_mysql extends ezSQLcore
         // Query was an insert, delete, update, replace
         $is_insert = false;
         if ( preg_match("/^(insert|delete|update|replace)\s+/i", $query) ) {
-            $this->affectedRows = @mysql_affected_rows($this->dbh);
+            $this->_affectedRows = @mysql_affected_rows($this->dbh);
 
             // Take note of the insert_id
             if ( preg_match("/^(insert|replace)\s+/i", $query) ) {
@@ -275,7 +275,7 @@ class ezSQL_mysql extends ezSQLcore
             }
 
             // Return number fo rows affected
-            $return_val = $this->affectedRows;
+            $return_val = $this->_affectedRows;
         } else {
             // Query was a select
 
@@ -318,10 +318,10 @@ class ezSQL_mysql extends ezSQLcore
     public function disconnect() {
         if ( $this->dbh ) {
             mysql_close($this->dbh);
-            $this->connected = false;
+            $this->_connected = false;
         }
         
-        $this->connected = false;
+        $this->_connected = false;
     } // function
     
     /**

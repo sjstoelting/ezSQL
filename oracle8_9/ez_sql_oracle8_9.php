@@ -90,7 +90,7 @@ class ezSQL_oracle8_9 extends ezSQLcore
      * @return boolean
      */
     public function connect($dbuser='', $dbpassword='', $dbname='') {
-        $this->connected = false;
+        $this->_connected = false;
 
         // Must have a user and a password
         if ( ! $dbuser || ! $dbpassword || ! $dbname ) {
@@ -106,10 +106,10 @@ class ezSQL_oracle8_9 extends ezSQLcore
             $this->_dbuser = $dbuser;
             $this->_dbpassword = $dbpassword;
             $this->_dbname = $dbname;
-            $this->connected = true;
+            $this->_connected = true;
         }
 
-        return $this->connected;
+        return $this->_connected;
     }
 
     /**
@@ -301,8 +301,8 @@ class ezSQL_oracle8_9 extends ezSQLcore
             $is_insert = true;
 
             // num afected rows
-            $this->affectedRows = @OCIRowCount($stmt);
-            $return_value = $this->affectedRows;
+            $this->_affectedRows = @OCIRowCount($stmt);
+            $return_value = $this->_affectedRows;
         } else {
             // If query was a select
             // Get column information
@@ -348,7 +348,7 @@ class ezSQL_oracle8_9 extends ezSQLcore
     public function disconnect() {
         if ( $this->dbh ) {
             $this->dbh = null;
-            $this->connected = false;
+            $this->_connected = false;
         }
     } // disconnect
 

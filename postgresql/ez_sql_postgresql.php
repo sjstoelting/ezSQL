@@ -109,7 +109,7 @@ class ezSQL_postgresql extends ezSQLcore
         if ( ! $this->connect($dbuser, $dbpassword, $dbname, $dbhost, $dbport, true) ) ;
         else if ( ! $this->select($dbname) );
         
-        return $this->connected;
+        return $this->_connected;
     } // quick_connect
 
     /**********************************************************************
@@ -129,7 +129,7 @@ class ezSQL_postgresql extends ezSQLcore
      * @return boolean
      */
     public function connect($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $dbport='5432') {
-        $this->connected = false;
+        $this->_connected = false;
         
         $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
         $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
@@ -146,10 +146,10 @@ class ezSQL_postgresql extends ezSQLcore
             $this->register_error($this->_ezsql_postgresql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($this->_ezsql_postgresql_str[2], E_USER_WARNING) : null;
         } else {
-            $this->connected = true;
+            $this->_connected = true;
         }
 
-        return $this->connected;
+        return $this->_connected;
     } // connect
 
     /**
@@ -170,7 +170,7 @@ class ezSQL_postgresql extends ezSQLcore
         
         $this->connect($dbuser, $dbpassword, $dbname, $dbhost, $dbport);
 
-        return $this->connected;
+        return $this->_connected;
     } // select
 
     /**
@@ -273,7 +273,7 @@ class ezSQL_postgresql extends ezSQLcore
         // Query was an insert, delete, update, replace
         $is_insert = false;
         if ( preg_match("/^(insert|delete|update|replace)\s+/i", $query) ) {
-            $this->affectedRows = @pg_affected_rows($this->result);
+            $this->_affectedRows = @pg_affected_rows($this->result);
 
             // Take note of the insert_id
             if ( preg_match("/^(insert|replace)\s+/i", $query) ) {
@@ -287,7 +287,7 @@ class ezSQL_postgresql extends ezSQLcore
             }
 
             // Return number fo rows affected
-            $return_val = $this->affectedRows;
+            $return_val = $this->_affectedRows;
         } else {
             // Query was a select
             $num_rows=0;
@@ -341,7 +341,7 @@ class ezSQL_postgresql extends ezSQLcore
     public function disconnect() {
         if ( $this->dbh ) {
             pg_close($this->dbh);
-            $this->connected = false;
+            $this->_connected = false;
         }
     } // disconnect
 

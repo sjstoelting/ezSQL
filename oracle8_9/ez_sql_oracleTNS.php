@@ -130,7 +130,7 @@ class ezSQL_oracleTNS extends ezSQLcore
      * @return boolean
      */
     public function connect($dbuser='', $dbpassword='') {
-        $this->connected = false;
+        $this->_connected = false;
         
         if (empty($dbuser)) {
             $dbuser = $this->dbuser;
@@ -155,7 +155,7 @@ class ezSQL_oracleTNS extends ezSQLcore
 
             }
 
-        return $this->connected;
+        return $this->_connected;
     } // connect
 
     /**
@@ -168,7 +168,7 @@ class ezSQL_oracleTNS extends ezSQLcore
      * @return boolean
      */
     public function pconnect($dbuser='', $dbpassword='') {
-        $this->connected = false;
+        $this->_connected = false;
         
         if (empty($dbuser)) {
             $dbuser = $this->dbuser;
@@ -188,7 +188,7 @@ class ezSQL_oracleTNS extends ezSQLcore
                 $this->_pconnect($dbuser, $dbpassword);
             }
 
-        return $this->connected;
+        return $this->_connected;
     } // pconnect
 
     /**
@@ -207,7 +207,7 @@ class ezSQL_oracleTNS extends ezSQLcore
                 } else {
                     $this->dbuser = $dbuser;
                     $this->dbpassword = $dbpassword;
-                    $this->connected = true;
+                    $this->_connected = true;
                 }
         } else {
                 if ( ! $this->dbh = @oci_connect($dbuser, $dbpassword, $this->tns) ) {
@@ -216,7 +216,7 @@ class ezSQL_oracleTNS extends ezSQLcore
                 } else {
                     $this->dbuser = $dbuser;
                     $this->dbpassword = $dbpassword;
-                    $this->connected = true;
+                    $this->_connected = true;
                 }
             }
     }
@@ -237,7 +237,7 @@ class ezSQL_oracleTNS extends ezSQLcore
                 } else {
                     $this->dbuser = $dbuser;
                     $this->dbpassword = $dbpassword;
-                    $this->connected = true;
+                    $this->_connected = true;
                 }
         } else {
                 if ( ! $this->dbh = @oci_pconnect($dbuser, $dbpassword, $this->tns) ) {
@@ -246,7 +246,7 @@ class ezSQL_oracleTNS extends ezSQLcore
                 } else {
                     $this->dbuser = $dbuser;
                     $this->dbpassword = $dbpassword;
-                    $this->connected = true;
+                    $this->_connected = true;
                 }
             }
     } // _connect
@@ -436,8 +436,8 @@ class ezSQL_oracleTNS extends ezSQLcore
             $is_insert = true;
 
             // num afected rows
-            $this->affectedRows = @OCIRowCount($stmt);
-            $return_value = $this->affectedRows;
+            $this->_affectedRows = @OCIRowCount($stmt);
+            $return_value = $this->_affectedRows;
         } else {
             // If query was a select
             // Get column information
@@ -483,7 +483,7 @@ class ezSQL_oracleTNS extends ezSQLcore
     public function disconnect() {
         if ( $this->dbh ) {
             oci_close($this->dbh);
-            $this->connected = false;
+            $this->_connected = false;
         }
     } // disconnect
 

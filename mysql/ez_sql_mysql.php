@@ -55,7 +55,7 @@ class ezSQL_mysql extends ezSQLcore
      * Database charset
      * @var string Default is utf8
      */
-    private $charset = 'utf8';
+    private $_charset = 'utf8';
     
     /**
      * Show errors
@@ -90,7 +90,7 @@ class ezSQL_mysql extends ezSQLcore
         $this->_dbname = $dbname;
         $this->_dbhost = $dbhost;
         if ( ! empty($charset) ) {
-            $this->charset = strtolower(str_replace('-', '', $charset));
+            $this->_charset = strtolower(str_replace('-', '', $charset));
         }
     } // __construct
 
@@ -130,7 +130,7 @@ class ezSQL_mysql extends ezSQLcore
         $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
         $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
         $this->_dbhost = $dbhost!='localhost' ? $this->_dbhost : $dbhost;
-        $this->charset = empty($charset) ? $this->charset : $charset;
+        $this->_charset = empty($charset) ? $this->_charset : $charset;
        
         // Must have a user and a password
         if ( empty($this->_dbuser) ) {
@@ -141,7 +141,7 @@ class ezSQL_mysql extends ezSQLcore
             $this->register_error($this->ezsql_mysql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($this->ezsql_mysql_str[2], E_USER_WARNING) : null;
         } else {
-            mysql_set_charset($this->charset, $this->dbh);
+            mysql_set_charset($this->_charset, $this->dbh);
             $this->connected = true;
         }
 
@@ -176,7 +176,7 @@ class ezSQL_mysql extends ezSQLcore
         } else {
             $this->_dbname = $dbname;
             if ( $charset == '') {
-                $charset = $this->charset;
+                $charset = $this->_charset;
             }
              if ( $charset != '' ) {
                 $encoding = strtolower(str_replace('-', '', $charset));
@@ -339,7 +339,7 @@ class ezSQL_mysql extends ezSQLcore
      * @return string
      */
     public function getCharset() {
-        return $this->charset;
+        return $this->_charset;
     } // getCharset
 
     /**

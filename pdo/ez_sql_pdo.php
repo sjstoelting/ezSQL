@@ -17,7 +17,7 @@ class ezSQL_pdo extends ezSQLcore
      * ezSQL error strings - PDO
      * @var array
      */
-    private $ezsql_pdo_str = array
+    private $_ezsql_pdo_str = array
         (
             1 => 'Require $dsn and $user and $password to create a connection',
             2 => 'File based databases require $dsn to create a connection'
@@ -27,32 +27,32 @@ class ezSQL_pdo extends ezSQLcore
      * The connection parameter string
      * @var string
      */
-    private $dsn;
+    private $_dsn;
 
     /**
      * The database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * The database password
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * The array for connection options, MySQL connection charset, for example
      * @var array
      */
-    private $options;
+    private $_options;
     
     /**
      * Whether it is a file based datbase connection, for example to a SQLite
      * database file, or not
      * @var boolean Default is false
      */
-    private $isFileBased=false;
+    private $_isFileBased=false;
 
     /**
      * Show errors
@@ -118,34 +118,34 @@ class ezSQL_pdo extends ezSQLcore
     public function connect($dsn='', $dbuser='', $dbpassword='', $options=array(), $isFileBased=false) {
         $this->connected = false;
 
-        $this->dsn = empty($dsn) ? $this->dsn : $dsn;
-        $this->isFileBased = $isFileBased;
+        $this->_dsn = empty($dsn) ? $this->_dsn : $dsn;
+        $this->_isFileBased = $isFileBased;
         
         if (!$isFileBased) {
-            $this->dbuser = empty($dbuser) ? $this->dbuser : $dbuser;
-            $this->dbpassword = empty($dbpassword) ? $this->dbpassword : $dbpassword;
-            $this->options = $options;        
+            $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
+            $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
+            $this->_options = $options;        
 
             // Must have a user and a password if not file based
-            if ( empty($this->dsn) || empty($this->dbuser) || empty($this->dbpassword) ) {
-                $this->register_error($this->ezsql_pdo_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-                $this->show_errors ? trigger_error($this->ezsql_pdo_str[1], E_USER_WARNING) : null;
+            if ( empty($this->_dsn) || empty($this->_dbuser) || empty($this->_dbpassword) ) {
+                $this->register_error($this->_ezsql_pdo_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+                $this->show_errors ? trigger_error($this->_ezsql_pdo_str[1], E_USER_WARNING) : null;
             }
-        } elseif (empty($this->dsn)) {
+        } elseif (empty($this->_dsn)) {
             // Must have a dsn
-            $this->register_error($this->ezsql_pdo_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_pdo_str[2], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_pdo_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_pdo_str[2], E_USER_WARNING) : null;
         
         }
         
 
         // Establish PDO connection
         try  {
-            if ($this->isFileBased) {
-                $this->dbh = new PDO($this->dsn);
+            if ($this->_isFileBased) {
+                $this->dbh = new PDO($this->_dsn);
                 $this->connected = true;
             } else {
-                $this->dbh = new PDO($this->dsn, $this->dbuser, $this->dbpassword, $this->options);
+                $this->dbh = new PDO($this->_dsn, $this->_dbuser, $this->_dbpassword, $this->_options);
                 $this->connected = true;
             }
         }
@@ -222,7 +222,7 @@ class ezSQL_pdo extends ezSQLcore
     public function escape($str) {
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dsn, $this->user, $this->password, $this->options, $this->isFileBased);
+            $this->connect($this->_dsn, $this->user, $this->password, $this->_options, $this->_isFileBased);
         }
 
         // pdo quote adds ' at the beginning and at the end, remove them for standard behavior
@@ -311,7 +311,7 @@ class ezSQL_pdo extends ezSQLcore
 
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dsn, $this->user, $this->password, $this->options, $this->isFileBased);
+            $this->connect($this->_dsn, $this->user, $this->password, $this->_options, $this->_isFileBased);
         }
 
         // Query was an insert, delete, update, replace

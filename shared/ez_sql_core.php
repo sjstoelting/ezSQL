@@ -61,7 +61,7 @@ class ezSQLcore
      * Show errors
      * @public boolean Default is false
      */
-    private $show_errors      = true;
+    private $_show_errors      = true;
 
     /**
      * Number of queries
@@ -181,13 +181,13 @@ class ezSQLcore
      * Whether the database connection is established, or not
      * @var boolean Default is false
      */
-    protected $connected = false;
+    protected $_connected = false;
     
     /**
      * Contains the number of affected rows of a query
      * @var int Default is 0
      */
-    protected $affectedRows = 0;
+    protected $_affectedRows = 0;
 
     /**
      * == TJH == default now needed for echo of debug function
@@ -213,7 +213,7 @@ class ezSQLcore
      * Function called
      * @var string
      */
-    private $func_call;
+    private $_func_call;
 
     /**
      * Constructor of ezSQL
@@ -243,14 +243,14 @@ class ezSQLcore
      * Turn error handling on, by default error handling is on
      */
     public function show_errors() {
-        $this->show_errors = true;
+        $this->_show_errors = true;
     } // show_errors
 
     /**
      *  Turn error handling off
      */
     public function hide_errors() {
-        $this->show_errors = false;
+        $this->_show_errors = false;
     } // hide_errors
 
     /**
@@ -274,7 +274,7 @@ class ezSQLcore
      */
     public function get_var($query=null, $x=0, $y=0) {
         // Log how the function was called
-        $this->func_call = "\$db->get_var(\"$query\",$x,$y)";
+        $this->_func_call = "\$db->get_var(\"$query\",$x,$y)";
 
         // If there is a query then perform it if not then use cached results..
         if ( $query ) {
@@ -300,7 +300,7 @@ class ezSQLcore
      */
     public function get_row($query=null, $output=self::OBJECT, $y=0) {
         // Log how the function was called
-        $this->func_call = "\$db->get_row(\"$query\",$output,$y)";
+        $this->_func_call = "\$db->get_row(\"$query\",$output,$y)";
 
         // If there is a query then perform it if not then use cached results..
         if ( $query ) {
@@ -362,7 +362,7 @@ class ezSQLcore
     public function get_results($query=null, $output=self::OBJECT) {
 
         // Log how the function was called
-        $this->func_call = "\$db->get_results(\"$query\", $output)";
+        $this->_func_call = "\$db->get_results(\"$query\", $output)";
 
         // If there is a query then perform it if not then use cached results..
         if ( $query ) {
@@ -436,7 +436,7 @@ class ezSQLcore
         if ( $this->use_disk_cache && ( $this->cache_queries && ! $is_insert ) || ( $this->cache_inserts && $is_insert )) {
             if ( ! is_dir($this->cache_dir) ) {
                 $this->register_error("Could not open cache dir: $this->cache_dir");
-                $this->show_errors ? trigger_error("Could not open cache dir: $this->cache_dir",E_USER_WARNING) : null;
+                $this->_show_errors ? trigger_error("Could not open cache dir: $this->cache_dir",E_USER_WARNING) : null;
             } else {
                 // Cache all result values
                 $result_cache = array
@@ -505,7 +505,7 @@ class ezSQLcore
         print_r(($mixed?$mixed:"<font color=red>No Value / False</font>"));
         echo "\n\n<b>Type:</b> " . ucfirst($var_type) . "\n";
         echo "<b>Last Query</b> [$this->num_queries]<b>:</b> ".($this->last_query?$this->last_query:"NULL")."\n";
-        echo "<b>Last Function Call:</b> " . ($this->func_call ? $this->func_call : "None")."\n";
+        echo "<b>Last Function Call:</b> " . ($this->_func_call ? $this->_func_call : "None")."\n";
         echo "<b>Last Rows Returned:</b> ".count($this->last_result)."\n";
         echo "</font></pre></font></blockquote></td></tr></table>".$this->donation();
         echo "\n<hr size=1 noshade color=dddddd>";
@@ -697,7 +697,7 @@ class ezSQLcore
      * @return boolean
      */
     public function isConnected() {
-        return $this->connected;
+        return $this->_connected;
     } // isConnected
 
     /**
@@ -706,7 +706,7 @@ class ezSQLcore
      * @return boolean
      */
     public function getShowErrors() {
-        return $this->show_errors;
+        return $this->_show_errors;
     } // getShowErrors
 
     /**
@@ -715,7 +715,7 @@ class ezSQLcore
      * @return int
      */
     public function affectedRows() {
-        return $this->affectedRows;
+        return $this->_affectedRows;
     } // affectedRows
     
 } // ezSQLcore

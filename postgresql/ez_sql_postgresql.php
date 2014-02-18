@@ -17,7 +17,7 @@ class ezSQL_postgresql extends ezSQLcore
      * ezSQL error strings - mySQL
      * @var array
      */
-    private $ezsql_postgresql_str = array
+    private $_ezsql_postgresql_str = array
         (
             1 => 'Require $dbuser and $dbpassword to connect to a database server',
             2 => 'Error establishing PostgreSQL database connection. Correct user/password? Correct hostname? Database server running?',
@@ -30,31 +30,31 @@ class ezSQL_postgresql extends ezSQLcore
      * Database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * Database password for the given user
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * Database name
      * @var string
      */
-    private $dbname;
+    private $_dbname;
 
     /**
      * Host name or IP address
      * @var string
      */
-    private $dbhost;
+    private $_dbhost;
 
     /**
      * TCP/IP port of PostgreSQL
      * @var string Default is PostgreSQL default port 5432
      */
-    private $dbport = '5432';
+    private $_dbport = '5432';
 
     /**
      * Show errors
@@ -84,11 +84,11 @@ class ezSQL_postgresql extends ezSQLcore
 
         parent::__construct();
 
-        $this->dbuser = $dbuser;
-        $this->dbpassword = $dbpassword;
-        $this->dbname = $dbname;
-        $this->dbhost = $dbhost;
-        $this->dbport = $dbport;
+        $this->_dbuser = $dbuser;
+        $this->_dbpassword = $dbpassword;
+        $this->_dbname = $dbname;
+        $this->_dbhost = $dbhost;
+        $this->_dbport = $dbport;
     } // __construct
 
     /**
@@ -131,20 +131,20 @@ class ezSQL_postgresql extends ezSQLcore
     public function connect($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $dbport='5432') {
         $this->connected = false;
         
-        $this->dbuser = empty($dbuser) ? $this->dbuser : $dbuser;
-        $this->dbpassword = empty($dbpassword) ? $this->dbpassword : $dbpassword;
-        $this->dbname = empty($dbname) ? $this->dbname : $dbname;
-        $this->dbhost = $dbhost!='localhost' ? $this->dbhost : $dbhost;
-        $this->dbport = $dbport!='5432' ? $dbport : $this->dbport;
+        $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
+        $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
+        $this->_dbname = empty($dbname) ? $this->_dbname : $dbname;
+        $this->_dbhost = $dbhost!='localhost' ? $this->_dbhost : $dbhost;
+        $this->_dbport = $dbport!='5432' ? $dbport : $this->_dbport;
 
-        if ( !$this->dbuser ) {
+        if ( !$this->_dbuser ) {
             // Must have a user and a password
-            $this->register_error($this->ezsql_postgresql_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_postgresql_str[1], E_USER_WARNING) : null;
-        } else if ( ! $this->dbh = pg_connect("host=$this->dbhost port=$this->dbport dbname=$this->dbname user=$this->dbuser password=$this->dbpassword", true) ) {
+            $this->register_error($this->_ezsql_postgresql_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_postgresql_str[1], E_USER_WARNING) : null;
+        } else if ( ! $this->dbh = pg_connect("host=$this->_dbhost port=$this->_dbport dbname=$this->_dbname user=$this->_dbuser password=$this->_dbpassword", true) ) {
             // Try to establish the server database handle
-            $this->register_error($this->ezsql_postgresql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_postgresql_str[2], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_postgresql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_postgresql_str[2], E_USER_WARNING) : null;
         } else {
             $this->connected = true;
         }
@@ -201,7 +201,7 @@ class ezSQL_postgresql extends ezSQLcore
      * @return string
      */
     public function showTables() {
-        return "SELECT table_name FROM information_schema.tables WHERE table_schema = '$this->dbname' AND table_type='BASE TABLE'";
+        return "SELECT table_name FROM information_schema.tables WHERE table_schema = '$this->_dbname' AND table_type='BASE TABLE'";
     } // showTables
 
     /**
@@ -211,7 +211,7 @@ class ezSQL_postgresql extends ezSQLcore
      * @return string
      */
     public function descTable($tbl_name) {
-        return "SELECT ordinal_position, column_name, data_type, column_default, is_nullable, character_maximum_length, numeric_precision FROM information_schema.columns WHERE table_name = '$tbl_name' AND table_schema='$this->dbname' ORDER BY ordinal_position";
+        return "SELECT ordinal_position, column_name, data_type, column_default, is_nullable, character_maximum_length, numeric_precision FROM information_schema.columns WHERE table_name = '$tbl_name' AND table_schema='$this->_dbname' ORDER BY ordinal_position";
     } // descTable
 
     /**
@@ -255,7 +255,7 @@ class ezSQL_postgresql extends ezSQLcore
 
         // If there is no existing database connection then try to connect
             if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dbuser, $this->dbpassword, $this->dbname, $this->dbhost, $this->dbport);
+            $this->connect($this->_dbuser, $this->_dbpassword, $this->_dbname, $this->_dbhost, $this->_dbport);
         }
 
         // Perform the query via std postgresql_query function..
@@ -351,7 +351,7 @@ class ezSQL_postgresql extends ezSQLcore
      * @return string
      */
     public function getDBHost() {
-        return $this->dbhost;
+        return $this->_dbhost;
     } // getDBHost
 
          /**
@@ -360,7 +360,7 @@ class ezSQL_postgresql extends ezSQLcore
      * @return string
      */
     public function getPort() {
-        return $this->dbport;
+        return $this->_dbport;
     } // getPort
 
 } // ezSQL_postgresql

@@ -17,7 +17,7 @@ class ezSQL_oracle8_9 extends ezSQLcore
      * ezSQL error strings - Oracle 8 and 9
      * @var array
      */
-    private $ezsql_oracle8_9_str = array
+    private $_ezsql_oracle8_9_str = array
         (
             1 => 'Require $dbuser, $dbpassword and $dbname to connect to a database server',
             2 => 'ezSQL auto created the following Oracle sequence'
@@ -27,19 +27,19 @@ class ezSQL_oracle8_9 extends ezSQLcore
      * Database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * Database password for the given user
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * Database name
      * @var string
      */
-    private $dbname;
+    private $_dbname;
 
     /**
      * Show errors
@@ -72,9 +72,9 @@ class ezSQL_oracle8_9 extends ezSQLcore
         // Turn on track errors
         ini_set('track_errors',1);
 
-        $this->dbuser = $dbuser;
-        $this->dbpassword = $dbpassword;
-        $this->dbname = $dbname;
+        $this->_dbuser = $dbuser;
+        $this->_dbpassword = $dbpassword;
+        $this->_dbname = $dbname;
 
     } // __construct
 
@@ -94,8 +94,8 @@ class ezSQL_oracle8_9 extends ezSQLcore
 
         // Must have a user and a password
         if ( ! $dbuser || ! $dbpassword || ! $dbname ) {
-            $this->register_error($this->ezsql_oracle8_9_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_oracle8_9_str[1], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_oracle8_9_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_oracle8_9_str[1], E_USER_WARNING) : null;
         }
         // Try to establish the server database handle
         else if ( ! $this->dbh = OCILogon($dbuser, $dbpassword, $dbname) )
@@ -103,9 +103,9 @@ class ezSQL_oracle8_9 extends ezSQLcore
             $this->register_error($php_errormsg);
             $this->show_errors ? trigger_error($php_errormsg,E_USER_WARNING) : null;
         } else {
-            $this->dbuser = $dbuser;
-            $this->dbpassword = $dbpassword;
-            $this->dbname = $dbname;
+            $this->_dbuser = $dbuser;
+            $this->_dbpassword = $dbpassword;
+            $this->_dbname = $dbname;
             $this->connected = true;
         }
 
@@ -234,8 +234,8 @@ class ezSQL_oracle8_9 extends ezSQLcore
         if ( ! $return_val ) {
             $this->query("CREATE SEQUENCE $seq_name maxValue 9999999999 INCREMENT BY 1 START WITH 1 CACHE 20 CYCLE");
             $return_val = $this->get_var("SELECT $seq_name.nextVal id FROM Dual");
-            $this->register_error($this->ezsql_oracle8_9_str[2] . ": $seq_name");
-            $this->show_errors ? trigger_error($this->ezsql_oracle8_9_str[2] . ": $seq_name", E_USER_NOTICE) : null;
+            $this->register_error($this->_ezsql_oracle8_9_str[2] . ": $seq_name");
+            $this->show_errors ? trigger_error($this->_ezsql_oracle8_9_str[2] . ": $seq_name", E_USER_NOTICE) : null;
         }
 
         return $return_val;
@@ -278,7 +278,7 @@ class ezSQL_oracle8_9 extends ezSQLcore
 
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dbuser, $this->dbpassword, $this->dbname);
+            $this->connect($this->_dbuser, $this->_dbpassword, $this->_dbname);
         }
 
         // Parses the query and returns a statement..
@@ -358,7 +358,7 @@ class ezSQL_oracle8_9 extends ezSQLcore
      * @return string
      */
     public function getDBName() {
-        return $this->dbname;
+        return $this->_dbname;
     } // getDBName
 
 } // ezSQL_oracle8_9

@@ -12,6 +12,8 @@ News about ezSQL are available at http://stefanie-stoelting.de/ezsql3-news.html
 
 Change Log:
 
+3.07 - Added the new class ezSQL_mysql to use mysqli. To update existing projects, just change the class you are using from ezSQL_mysql to ezSQL_mysqli. This class is downward compatible to ezSQL_mysql, but is able to use prepared statements.
+
 3.06 - Extended ezSQL_mysql method quick_connect with a charset parameter
 
 3.05 - Extended ez_sql_oracleTNS class, that does now support client site connection pooling

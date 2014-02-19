@@ -12,7 +12,7 @@ require_once dirname(__FILE__) . '/../../../mysql/ez_sql_mysql.php';
  * Run database tear down after tests to get rid of the database and the user.
  *
  * @author  Stefanie Janine Stoelting <mail@stefanie-stoelting.de>
- * @name    ezSQL_mysql_tear_up
+ * @name    ezSQL_mysqlTest
  * @uses    mysql_test_db_tear_up.sql
  * @uses    mysql_test_db_tear_down.sql
  * @package ezSQL

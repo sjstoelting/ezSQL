@@ -2,14 +2,14 @@
 /**
  * ezSQL Database specific class - mySQL
  * Desc..: mySQL component (part of ezSQL databse abstraction library)
- * 
+ *
  * @author  Justin Vincent (jv@jvmultimedia.com)
  * @author  Stefanie Janine Stoelting <mail@stefanie-stoelting.de>
  * @link    http://twitter.com/justinvincent
  * @name    ezSQL_mysql
  * @package ezSQL
  * @license FREE / Donation (LGPL - You may do what you like with ezSQL - no exceptions.)
- * 
+ *
  */
 class ezSQL_mysql extends ezSQLcore
 {
@@ -26,7 +26,7 @@ class ezSQL_mysql extends ezSQLcore
             5 => 'Unexpected error while trying to select database'
         );
 
-    
+
     /**
      * Database user name
      * @var string
@@ -50,13 +50,13 @@ class ezSQL_mysql extends ezSQLcore
      * @var string
      */
     private $_dbhost;
-    
+
     /**
      * Database charset
      * @var string Default is utf8
      */
     private $_charset = 'utf8';
-    
+
     /**
      * Show errors
      * @var boolean Default is true
@@ -64,7 +64,14 @@ class ezSQL_mysql extends ezSQLcore
     public $show_errors = true;
 
     /**
-     * Constructor - allow the user to perform a qucik connect at the same time 
+     * Database connection
+     * @var resource
+     */
+    public $dbh;
+
+
+    /**
+     * Constructor - allow the user to perform a qucik connect at the same time
      * as initialising the ezSQL_mysql class
      *
      * @param string $dbuser The database user name
@@ -82,9 +89,9 @@ class ezSQL_mysql extends ezSQLcore
         if ( ! class_exists ('ezSQLcore') ) {
             throw new Exception('<b>Fatal Error:</b> ezSQL_mysql requires ezSQLcore (ez_sql_core.php) to be included/loaded before it can be used');
         }
-       
+
         parent::__construct();
-       
+
         $this->_dbuser = $dbuser;
         $this->_dbpassword = $dbpassword;
         $this->_dbname = $dbname;
@@ -104,12 +111,12 @@ class ezSQL_mysql extends ezSQLcore
      * @param string $dbhost The host name or IP address of the database server.
      *                       Default is localhost
      * @param string $charset Encoding of the database
-     * @return boolean 
+     * @return boolean
      */
     public function quick_connect($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $charset='') {
         if ( ! $this->connect($dbuser, $dbpassword, $dbhost, true) ) ;
         else if ( ! $this->select($dbname, $charset) ) ;
-        
+
         return $this->_connected;
     } // quick_connect
 
@@ -122,16 +129,16 @@ class ezSQL_mysql extends ezSQLcore
      *                       Default is localhost
      * @param type $charset The database charset
      *                      Default is empty string
-     * @return boolean 
+     * @return boolean
      */
     public function connect($dbuser='', $dbpassword='', $dbhost='localhost', $charset='') {
         $this->_connected = false;
-        
+
         $this->_dbuser = empty($dbuser) ? $this->_dbuser : $dbuser;
         $this->_dbpassword = empty($dbpassword) ? $this->_dbpassword : $dbpassword;
         $this->_dbhost = $dbhost!='localhost' ? $this->_dbhost : $dbhost;
         $this->_charset = empty($charset) ? $this->_charset : $charset;
-       
+
         // Must have a user and a password
         if ( empty($this->_dbuser) ) {
             $this->register_error($this->ezsql_mysql_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
@@ -153,7 +160,7 @@ class ezSQL_mysql extends ezSQLcore
      *
      * @param string $dbname The name of the database
      * @param string $charset Encoding of the database
-     * @return boolean 
+     * @return boolean
      */
     public function select($dbname='', $charset='') {
         if ( ! $dbname ) {
@@ -186,8 +193,8 @@ class ezSQL_mysql extends ezSQLcore
                         $charsets[] = $row['Charset'];
                 }
                 if ( in_array($charset, $charsets) ) {
-                    mysql_query('SET NAMES \'' . $encoding . '\'');                                                
-                }    
+                    mysql_query('SET NAMES \'' . $encoding . '\'');
+                }
             }
             $this->_connected = true;
         }
@@ -200,7 +207,7 @@ class ezSQL_mysql extends ezSQLcore
      * (no matter if magic quotes are on or not)
      *
      * @param string $str
-     * @return string 
+     * @return string
      */
     public function escape($str) {
         return mysql_real_escape_string(stripslashes($str));
@@ -209,8 +216,8 @@ class ezSQL_mysql extends ezSQLcore
     /**
      * Return mySQL specific system date syntax
      * i.e. Oracle: SYSDATE Mysql: NOW()
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function sysdate() {
         return 'NOW()';
@@ -220,7 +227,7 @@ class ezSQL_mysql extends ezSQLcore
      * Perform mySQL query and try to determine result value
      *
      * @param type $query
-     * @return boolean 
+     * @return boolean
      */
     public function query($query) {
 
@@ -314,16 +321,16 @@ class ezSQL_mysql extends ezSQLcore
 
     /**
      * Close the database connection
-     */    
+     */
     public function disconnect() {
         if ( $this->dbh ) {
             mysql_close($this->dbh);
             $this->_connected = false;
         }
-        
+
         $this->_connected = false;
     } // function
-    
+
     /**
      * Returns the current database server host
      *
@@ -344,7 +351,7 @@ class ezSQL_mysql extends ezSQLcore
 
     /**
      * Returns the last inserted autoincrement
-     * 
+     *
      * @return int
      */
     public function getInsertId() {

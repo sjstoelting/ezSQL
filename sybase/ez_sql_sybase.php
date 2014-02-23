@@ -18,7 +18,7 @@ class ezSQL_sybase extends ezSQLcore
      * ezSQL error strings - Sybase ASE
      * @var array
      */
-    private $ezsql_sybase_str = array
+    private $_ezsql_sybase_str = array
         (
                 1 => 'Require $dbuser and $dbpassword to connect to a database server',
                 2 => 'Error establishing sybase database connection. Correct user/password? Correct hostname? Database server running?',
@@ -31,38 +31,38 @@ class ezSQL_sybase extends ezSQLcore
      * Database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * Database password for the given user
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * Database name
      * @var string
      */
-    private $dbname;
+    private $_dbname;
 
     /**
      * Host name or IP address
      * @var string
      */
-    private $dbhost;
-
-    /**
-     * Show errors
-     * @var boolean Default is true
-     */
-    public $show_errors = true;
+    private $_dbhost;
 
     /**
      * if we want to convert Queries in MySql syntax to Sybase syntax. Yes,
      * there are some differences in query syntax.
      * @var boolean Default is true
      */
-    private $convertMySqlToSybaseQuery = true;
+    private $_convertMySqlToSybaseQuery = true;
+
+    /**
+     * Show errors
+     * @var boolean Default is true
+     */
+    public $show_errors = true;
 
     /**********************************************************************
     *  Constructor - allow the user to perform a qucik connect at the
@@ -93,11 +93,11 @@ class ezSQL_sybase extends ezSQLcore
         sybase_min_server_severity(20);
         parent::__construct();
 
-        $this->dbuser = $dbuser;
-        $this->dbpassword = $dbpassword;
-        $this->dbname = $dbname;
-        $this->dbhost = $dbhost;
-        $this->convertMySqlToSybaseQuery = $convertMySqlToSybaseQuery;
+        $this->_dbuser = $dbuser;
+        $this->_dbpassword = $dbpassword;
+        $this->_dbname = $dbname;
+        $this->_dbhost = $dbhost;
+        $this->_convertMySqlToSybaseQuery = $convertMySqlToSybaseQuery;
     } // __construct
 
     /**
@@ -137,16 +137,16 @@ class ezSQL_sybase extends ezSQLcore
 
         // Must have a user and a password
         if ( ! $dbuser ) {
-            $this->register_error($this->ezsql_sybase_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_sybase_str[1], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_sybase_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_sybase_str[1], E_USER_WARNING) : null;
         } else if ( ! $this->dbh = @sybase_connect($dbhost, $dbuser, $dbpassword) ) {
             // Try to establish the server database handle
-            $this->register_error($this->ezsql_sybase_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_sybase_str[2], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_sybase_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_sybase_str[2], E_USER_WARNING) : null;
         } else {
-            $this->dbuser = $dbuser;
-            $this->dbpassword = $dbpassword;
-            $this->dbhost = $dbhost;
+            $this->_dbuser = $dbuser;
+            $this->_dbpassword = $dbpassword;
+            $this->_dbhost = $dbhost;
             $this->_connected = true;
         }
 
@@ -168,12 +168,12 @@ class ezSQL_sybase extends ezSQLcore
 
         // Must have a database name
         if ( ! $dbname ) {
-            $this->register_error($this->ezsql_sybase_str[3] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_sybase_str[3], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_sybase_str[3] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_sybase_str[3], E_USER_WARNING) : null;
         } else if ( ! $this->dbh ) {
             // Must have an active database connection
-            $this->register_error($this->ezsql_sybase_str[4] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_sybase_str[4], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_sybase_str[4] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_sybase_str[4], E_USER_WARNING) : null;
         } else if ( !@sybase_select_db($dbname,$this->dbh) ) {
             // Try to connect to the database
             $str = $ezsql_sybase_str[5];
@@ -181,7 +181,7 @@ class ezSQL_sybase extends ezSQLcore
             $this->register_error($str . ' in ' . __FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($str, E_USER_WARNING) : null;
         } else {
-            $this->dbname = $dbname;
+            $this->_dbname = $dbname;
             $this->_connected = true;
         }
 
@@ -269,8 +269,8 @@ class ezSQL_sybase extends ezSQLcore
 
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dbuser, $this->dbpassword, $this->dbhost);
-            $this->select($this->dbname);
+            $this->connect($this->_dbuser, $this->_dbpassword, $this->_dbhost);
+            $this->select($this->_dbname);
         }
 
 
@@ -431,7 +431,7 @@ class ezSQL_sybase extends ezSQLcore
      * @return string
      */
     public function getDBHost() {
-        return $this->dbhost;
+        return $this->_dbhost;
     } // getDBHost
 
 } // ezSQL_sybase

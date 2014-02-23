@@ -15,7 +15,7 @@ class ezSQL_oracleTNS extends ezSQLcore
      * ezSQL error strings - Oracle 8 and 9
      * @var array
      */
-    private $ezsql_oracle_str = array
+    private $_ezsql_oracle_str = array
         (
             1 => 'Require $dbuser, $dbpassword and $dbname to connect to a database server',
             2 => 'ezSQL auto created the following Oracle sequence'
@@ -25,51 +25,51 @@ class ezSQL_oracleTNS extends ezSQLcore
      * Database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * Database password for the given user
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * Database server name or IP address
      * @var string
      */
-    private $host;
+    private $_host;
 
     /**
      * TCP port for the database connection on the specified server
      * @var integer
      */
-    private $port;
+    private $_port;
 
     /**
      * The service name
      * @var string
      */
-    private $serviceName;
+    private $_serviceName;
 
     /**
      * The connection string
      * @var string
      */
-    private $tns;
+    private $_tns;
 
     /**
      * The Oracle NLS_LANG character set for the connection
      * Default: Empty string
      * @var string
      */
-    private $characterSet;
+    private $_characterSet;
     
     /**
      * Use oci_pconnect instead of oci_connect to have connection pooling
      * enabled with PHP
      * @var boolean
      */
-    private $pooling;
+    private $_pooling;
     
     /**
      * Show errors
@@ -109,14 +109,14 @@ class ezSQL_oracleTNS extends ezSQLcore
         // Turn on track errors
         ini_set('track_errors',1);
 
-        $this->dbuser = $dbuser;
-        $this->dbpassword = $dbpassword;
-        $this->host = $host;
-        $this->port = $port;
-        $this->serviceName = $serviceName;
-        $this->characterSet = $characterSet;
+        $this->_dbuser = $dbuser;
+        $this->_dbpassword = $dbpassword;
+        $this->_host = $host;
+        $this->_port = $port;
+        $this->_serviceName = $serviceName;
+        $this->_characterSet = $characterSet;
         $this->setTNS();
-        $this->pooling = $pooling;
+        $this->_pooling = $pooling;
 
     } // __construct
 
@@ -133,21 +133,21 @@ class ezSQL_oracleTNS extends ezSQLcore
         $this->_connected = false;
         
         if (empty($dbuser)) {
-            $dbuser = $this->dbuser;
+            $dbuser = $this->_dbuser;
         }
         if (empty($dbpassword)) {
-            $dbpassword = $this->dbpassword;
+            $dbpassword = $this->_dbpassword;
         }
 
         // Must have a user and a password
         if ( ! $dbuser || ! $dbpassword) {
-            $this->register_error($this->ezsql_oracle_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_oracle_str[1], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_oracle_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_oracle_str[1], E_USER_WARNING) : null;
         }
 
         // Try to establish the server database handle
         else {
-                if ($this->pooling) {
+                if ($this->_pooling) {
                     $this->_pconnect($dbuser, $dbpassword);
                 }  else {
                     $this->_connect($dbuser, $dbpassword);
@@ -171,16 +171,16 @@ class ezSQL_oracleTNS extends ezSQLcore
         $this->_connected = false;
         
         if (empty($dbuser)) {
-            $dbuser = $this->dbuser;
+            $dbuser = $this->_dbuser;
         }
         if (empty($dbpassword)) {
-            $dbpassword = $this->dbpassword;
+            $dbpassword = $this->_dbpassword;
         }
 
         // Must have a user and a password
         if ( ! $dbuser || ! $dbpassword) {
-            $this->register_error($this->ezsql_oracle_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_oracle_str[1], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_oracle_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_oracle_str[1], E_USER_WARNING) : null;
         }
 
         // Try to establish the server database handle
@@ -200,22 +200,22 @@ class ezSQL_oracleTNS extends ezSQLcore
      *                           Default is empty string
      */
     private function _connect($dbuser='', $dbpassword='') {
-        if ( ! empty($this->characterSet) ) {
-                if ( ! $this->dbh = @oci_connect($dbuser, $dbpassword, $this->tns, $this->characterSet) ) {
+        if ( ! empty($this->_characterSet) ) {
+                if ( ! $this->dbh = @oci_connect($dbuser, $dbpassword, $this->_tns, $this->_characterSet) ) {
                     $this->register_error($php_errormsg);
                     $this->show_errors ? trigger_error($php_errormsg,E_USER_WARNING) : null;
                 } else {
-                    $this->dbuser = $dbuser;
-                    $this->dbpassword = $dbpassword;
+                    $this->_dbuser = $dbuser;
+                    $this->_dbpassword = $dbpassword;
                     $this->_connected = true;
                 }
         } else {
-                if ( ! $this->dbh = @oci_connect($dbuser, $dbpassword, $this->tns) ) {
+                if ( ! $this->dbh = @oci_connect($dbuser, $dbpassword, $this->_tns) ) {
                     $this->register_error($php_errormsg);
                     $this->show_errors ? trigger_error($php_errormsg,E_USER_WARNING) : null;
                 } else {
-                    $this->dbuser = $dbuser;
-                    $this->dbpassword = $dbpassword;
+                    $this->_dbuser = $dbuser;
+                    $this->_dbpassword = $dbpassword;
                     $this->_connected = true;
                 }
             }
@@ -230,22 +230,22 @@ class ezSQL_oracleTNS extends ezSQLcore
      *                           Default is empty string
      */
     private function _pconnect($dbuser='', $dbpassword='') {
-        if ( ! empty($this->characterSet) ) {
-                if ( ! $this->dbh = @oci_pconnect($dbuser, $dbpassword, $this->tns, $this->characterSet) ) {
+        if ( ! empty($this->_characterSet) ) {
+                if ( ! $this->dbh = @oci_pconnect($dbuser, $dbpassword, $this->_tns, $this->_characterSet) ) {
                     $this->register_error($php_errormsg);
                     $this->show_errors ? trigger_error($php_errormsg,E_USER_WARNING) : null;
                 } else {
-                    $this->dbuser = $dbuser;
-                    $this->dbpassword = $dbpassword;
+                    $this->_dbuser = $dbuser;
+                    $this->_dbpassword = $dbpassword;
                     $this->_connected = true;
                 }
         } else {
-                if ( ! $this->dbh = @oci_pconnect($dbuser, $dbpassword, $this->tns) ) {
+                if ( ! $this->dbh = @oci_pconnect($dbuser, $dbpassword, $this->_tns) ) {
                     $this->register_error($php_errormsg);
                     $this->show_errors ? trigger_error($php_errormsg,E_USER_WARNING) : null;
                 } else {
-                    $this->dbuser = $dbuser;
-                    $this->dbpassword = $dbpassword;
+                    $this->_dbuser = $dbuser;
+                    $this->_dbpassword = $dbpassword;
                     $this->_connected = true;
                 }
             }
@@ -369,8 +369,8 @@ class ezSQL_oracleTNS extends ezSQLcore
         if ( ! $return_val ) {
             $this->query("CREATE SEQUENCE $seq_name maxValue 9999999999 INCREMENT BY 1 START WITH 1 CACHE 20 CYCLE");
             $return_val = $this->get_var("SELECT $seq_name.nextVal id FROM Dual");
-            $this->register_error($this->ezsql_oracle_str[2] . ": $seq_name");
-            $this->show_errors ? trigger_error($this->ezsql_oracle_str[2] . ": $seq_name", E_USER_NOTICE) : null;
+            $this->register_error($this->_ezsql_oracle_str[2] . ": $seq_name");
+            $this->show_errors ? trigger_error($this->_ezsql_oracle_str[2] . ": $seq_name", E_USER_NOTICE) : null;
         }
 
         return $return_val;
@@ -413,7 +413,7 @@ class ezSQL_oracleTNS extends ezSQLcore
 
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dbuser, $this->dbpassword);
+            $this->connect($this->_dbuser, $this->_dbpassword);
         }
 
         // Parses the query and returns a statement..
@@ -491,9 +491,9 @@ class ezSQL_oracleTNS extends ezSQLcore
      * Sets the TNS variable with all relevant connection informations
      */
     private function setTNS() {
-        $this->tns = "(DESCRIPTION =
-            (ADDRESS=(PROTOCOL = TCP)(HOST = $this->host)(PORT = $this->port))
-            (CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME = $this->serviceName)))";
+        $this->_tns = "(DESCRIPTION =
+            (ADDRESS=(PROTOCOL = TCP)(HOST = $this->_host)(PORT = $this->_port))
+            (CONNECT_DATA=(SERVER = DEDICATED)(SERVICE_NAME = $this->_serviceName)))";
     } // setTNS
 
 } // ezSQL_oracle8_9

@@ -17,7 +17,7 @@ class ezSQL_mssql extends ezSQLcore
      * ezSQL error strings - mssql
      * @var array Default 5 error messages
      */
-    private $ezsql_mssql_str = array
+    private $_ezsql_mssql_str = array
         (
             1 => 'Require $dbuser and $dbpassword to connect to a database server',
             2 => 'Error establishing mssql database connection. Correct user/password? Correct hostname? Database server running?',
@@ -30,38 +30,38 @@ class ezSQL_mssql extends ezSQLcore
      * Database user name
      * @var string
      */
-    private $dbuser;
+    private $_dbuser;
 
     /**
      * Database password for the given user
      * @var string
      */
-    private $dbpassword;
+    private $_dbpassword;
 
     /**
      * Database name
      * @var string
      */
-    private $dbname;
+    private $_dbname;
 
     /**
      * Host name or IP address
      * @var string
      */
-    private $dbhost;
-
-    /**
-     * Show errors
-     * @var boolean Default is true
-     */
-    public $show_errors = true;
+    private $_dbhost;
 
     /**
      * If we want to convert Queries in MySql syntax to MS-SQL syntax. Yes,
      * there are some differences in query syntax.
      * @var boolean Default is true
      */
-    private $convertMySqlToMSSqlQuery = true;
+    private $_convertMySqlToMSSqlQuery = true;
+
+    /**
+     * Show errors
+     * @var boolean Default is true
+     */
+    public $show_errors = true;
 
     /**
      * Constructor - allow the user to perform a qucik connect at the same time
@@ -88,11 +88,11 @@ class ezSQL_mssql extends ezSQLcore
 
         parent::__construct();
 
-        $this->dbuser = $dbuser;
-        $this->dbpassword = $dbpassword;
-        $this->dbname = $dbname;
-        $this->dbhost = $dbhost;
-        $this->convertMySqlToMSSqlQuery = $convertMySqlToMSSqlQuery;
+        $this->_dbuser = $dbuser;
+        $this->_dbpassword = $dbpassword;
+        $this->_dbname = $dbname;
+        $this->_dbhost = $dbhost;
+        $this->_convertMySqlToMSSqlQuery = $convertMySqlToMSSqlQuery;
     } // __construct
 
     /**
@@ -128,16 +128,16 @@ class ezSQL_mssql extends ezSQLcore
         // Must have a user and a password
         if ( ! $dbuser )
         {
-            $this->register_error($this->ezsql_mssql_str[1] . ' in ' . __FILE__ . ' on line ' .__LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mssql_str[1], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mssql_str[1] . ' in ' . __FILE__ . ' on line ' .__LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mssql_str[1], E_USER_WARNING) : null;
         } else if ( ! $this->dbh = @mssql_connect($dbhost, $dbuser, $dbpassword) ) {
             // Try to establish the server database handle
-            $this->register_error($this->ezsql_mssql_str[2] . ' in ' .__FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mssql_str[2], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mssql_str[2] . ' in ' .__FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mssql_str[2], E_USER_WARNING) : null;
         } else {
-            $this->dbuser = $dbuser;
-            $this->dbpassword = $dbpassword;
-            $this->dbhost = $dbhost;
+            $this->_dbuser = $dbuser;
+            $this->_dbpassword = $dbpassword;
+            $this->_dbhost = $dbhost;
             $this->_connected = true;
         }
 
@@ -153,20 +153,20 @@ class ezSQL_mssql extends ezSQLcore
     public function select($dbname='') {
         if ( ! $dbname ) {
             // Must have a database name
-            $this->register_error($this->ezsql_mssql_str[3] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mssql_str[3], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mssql_str[3] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mssql_str[3], E_USER_WARNING) : null;
         } else if ( ! $this->dbh ) {
             // Must have an active database connection
-            $this->register_error($this->ezsql_mssql_str[4] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mssql_str[4], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mssql_str[4] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mssql_str[4], E_USER_WARNING) : null;
         } else if ( !@mssql_select_db($dbname,$this->dbh) ) {
             // Try to connect to the database
-            $str = $this->ezsql_mssql_str[5];
+            $str = $this->_ezsql_mssql_str[5];
 
             $this->register_error($str . ' in ' . __FILE__ . ' on line ' . __LINE__);
             $this->show_errors ? trigger_error($str, E_USER_WARNING) : null;
         } else {
-            $this->dbname = $dbname;
+            $this->_dbname = $dbname;
             $this->_connected = true;
         }
 
@@ -227,7 +227,7 @@ class ezSQL_mssql extends ezSQLcore
 
         // If flag to convert query from MySql syntax to MS-Sql syntax is true
         // convert the query
-        if($this->convertMySqlToMSSqlQuery == true) {
+        if($this->_convertMySqlToMSSqlQuery == true) {
             $query = $this->ConvertMySqlToMSSql($query);
         }
 
@@ -257,8 +257,8 @@ class ezSQL_mssql extends ezSQLcore
 
         // If there is no existing database connection then try to connect
         if ( ! isset($this->dbh) || ! $this->dbh ) {
-            $this->connect($this->dbuser, $this->dbpassword, $this->dbhost);
-            $this->select($this->dbname);
+            $this->connect($this->_dbuser, $this->_dbpassword, $this->_dbhost);
+            $this->select($this->_dbname);
         }
 
         // Perform the query via std mssql_query function..
@@ -417,7 +417,7 @@ class ezSQL_mssql extends ezSQLcore
      * @return string
      */
     public function getDBHost() {
-        return $this->dbhost;
+        return $this->_dbhost;
     } // getDBHost
 
 } // ezSQL_mssql

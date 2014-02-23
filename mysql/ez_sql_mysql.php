@@ -17,7 +17,7 @@ class ezSQL_mysql extends ezSQLcore
      * ezSQL error strings - mySQL
      * @var array
      */
-    private $ezsql_mysql_str = array
+    private $_ezsql_mysql_str = array
         (
             1 => 'Require $dbuser and $dbpassword to connect to a database server',
             2 => 'Error establishing mySQL database connection. Correct user/password? Correct hostname? Database server running?',
@@ -141,12 +141,12 @@ class ezSQL_mysql extends ezSQLcore
 
         // Must have a user and a password
         if ( empty($this->_dbuser) ) {
-            $this->register_error($this->ezsql_mysql_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mysql_str[1], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mysql_str[1] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mysql_str[1], E_USER_WARNING) : null;
         } else if ( ! $this->dbh = @mysql_connect($this->_dbhost, $this->_dbuser, $this->_dbpassword, true, 131074) ) {
             // Try to establish the server database handle
-            $this->register_error($this->ezsql_mysql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mysql_str[2], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mysql_str[2] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mysql_str[2], E_USER_WARNING) : null;
         } else {
             mysql_set_charset($this->_charset, $this->dbh);
             $this->_connected = true;
@@ -165,17 +165,17 @@ class ezSQL_mysql extends ezSQLcore
     public function select($dbname='', $charset='') {
         if ( ! $dbname ) {
             // Must have a database name
-            $this->register_error($this->ezsql_mysql_str[3] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mysql_str[3], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mysql_str[3] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mysql_str[3], E_USER_WARNING) : null;
         } else if ( ! $this->dbh ) {
             // Must have an active database connection
-            $this->register_error($this->ezsql_mysql_str[4] . ' in ' . __FILE__ . ' on line ' . __LINE__);
-            $this->show_errors ? trigger_error($this->ezsql_mysql_str[4], E_USER_WARNING) : null;
+            $this->register_error($this->_ezsql_mysql_str[4] . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            $this->show_errors ? trigger_error($this->_ezsql_mysql_str[4], E_USER_WARNING) : null;
         } else if ( !@mysql_select_db($dbname, $this->dbh) ) {
             // Try to connect to the database
             // Try to get error supplied by mysql if not use our own
             if ( !$str = @mysql_error($this->dbh)) {
-                $str = $this->ezsql_mysql_str[5];
+                $str = $this->_ezsql_mysql_str[5];
             }
 
             $this->register_error($str . ' in ' .__FILE__ . ' on line ' . __LINE__);

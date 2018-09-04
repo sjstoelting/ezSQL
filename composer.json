@@ -27,8 +27,7 @@
         }
     ],
     "require": {
-        "php": ">5.6",
-        "techno-express/ezsql": "dev-ezSQL3"
+        "php": ">5.6"
     },
     "autoload": {
         "files": ["ez_sql_loader.php"]

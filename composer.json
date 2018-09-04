@@ -2,7 +2,7 @@
     "name": "techno-express/ezsql",
     "description": "PHP class to make interacting with a database ridiculously easy.",
     "keywords": ["mysqli","postgres","msserver","pdo","database","abstraction","dba"],
-    "license": "LGPL",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Justin Vincent",

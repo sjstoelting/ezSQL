@@ -1,5 +1,5 @@
 {
-    "name": "jv2222/ezsql",
+    "name": "techno-express/ezSQL",
     "description": "PHP class to make interacting with a database ridiculously easy.",
     "keywords": ["mysqli","postgres","msserver","pdo","database","abstraction","dba"],
     "license": "LGPL",
@@ -23,7 +23,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/ezSQL/ezSQL"
+            "url": "https://github.com/techno-express/ezSQL"
         }
     ],
     "require": {

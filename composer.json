@@ -1,5 +1,5 @@
 {
-    "name": "techno-express/ezSQL",
+    "name": "techno-express/ezsql",
     "description": "PHP class to make interacting with a database ridiculously easy.",
     "keywords": ["mysqli","postgres","msserver","pdo","database","abstraction","dba"],
     "license": "LGPL",
@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": ">5.6",
-        "techno-express/ezSQL": "dev-ezSQL3"
+        "techno-express/ezsql": "dev-ezSQL3"
     },
     "autoload": {
         "files": ["ez_sql_loader.php"]

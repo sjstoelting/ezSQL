@@ -61,7 +61,7 @@ class ezSQL_mysqli extends ezSQLcore
      * Query result
      * @var mixed
      */
-    private $result;
+    private $_result;
 
 
     /**
@@ -267,7 +267,7 @@ class ezSQL_mysqli extends ezSQLcore
         }
 
         // Perform the query via std mysql_query function..
-        $this->result = mysqli_query($this->dbh, $query);
+        $this->_result = mysqli_query($this->dbh, $query);
 
         // If there is an error then take note of it..
         if ( $str = mysqli_error($this->dbh) ) {
@@ -290,25 +290,25 @@ class ezSQL_mysqli extends ezSQLcore
             // Return number fo rows affected
             $return_val = $this->_affectedRows;
         } else {
-            if ( !is_numeric($this->result) && !is_bool($this->result)) {
+            if ( !is_numeric($this->_result) && !is_bool($this->_result)) {
                 // Query was a select
 
                 // Take note of column info
                 $i=0;
-                while ($i < mysqli_num_fields($this->result)) {
-                    $this->col_info[$i] = mysqli_fetch_field($this->result);
+                while ($i < mysqli_num_fields($this->_result)) {
+                    $this->col_info[$i] = mysqli_fetch_field($this->_result);
                     $i++;
                 }
 
                 // Store Query Results
                 $num_rows=0;
-                while ( $row = mysqli_fetch_object($this->result) ) {
+                while ( $row = mysqli_fetch_object($this->_result) ) {
                     // Store relults as an objects within main array
                     $this->last_result[$num_rows] = $row;
                     $num_rows++;
                 }
 
-                mysqli_free_result($this->result);
+                mysqli_free_result($this->_result);
 
                 // Log number of rows the query returned
                 $this->num_rows = $num_rows;

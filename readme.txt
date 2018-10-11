@@ -10,6 +10,9 @@ News about ezSQL are available at http://stefanie-stoelting.de/ezsql3-news.html
 
 =======================================================================
 
+Because all my changes have been merged into ezSQL, please see https://github.com/sjstoelting/ezSQL3/pull/1 for further information, you should now use the original ezSQL sources from https://github.com/ezSQL/ezSQL.
+
+
 Change Log:
 
 3.07 - Added the new class ezSQL_mysql to use mysqli. To update existing projects, just change the class you are using from ezSQL_mysql to ezSQL_mysqli. This class is downward compatible to ezSQL_mysql, but is able to use prepared statements.
